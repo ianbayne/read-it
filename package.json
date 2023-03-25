@@ -1,0 +1,12 @@
+{
+  "name": "read-it",
+  "version": "1.0.0",
+  "description": "Google Chrome extension helping Reddit users identify which comments they haven't read yet",
+  "repository": "https://github.com/ianbayne/read-it.git",
+  "author": "Ian Bayne <ianbayne@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "prettier": "^2.8.7"
+  }
+}
