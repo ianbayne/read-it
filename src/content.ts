@@ -1,10 +1,8 @@
-const DATE_TIME = "2023-03-26T01:01:09+00:00";
-
-function run(): void {
+function run(dateTime: string): void {
   const commentTimeElements = document.querySelectorAll(
     "time.live-timestamp"
   ) as NodeListOf<HTMLTimeElement>;
-  const dateTimeToCheckAgainst = new Date(DATE_TIME);
+  const dateTimeToCheckAgainst = new Date(dateTime);
 
   const commentTimeElementsAfterTimeConstant = Array.from(
     commentTimeElements
@@ -29,7 +27,7 @@ function run(): void {
 }
 
 chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
-  if (request.enabled) {
-    run();
+  if (request.selectedDateTime) {
+    run(request.selectedDateTime);
   }
 });
