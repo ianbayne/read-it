@@ -3,8 +3,7 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_title": "Click to provide indication of new comments on Reddit",
-    "default_popup": "popup.html"
+    "default_title": "Click to provide indication of new comments on Reddit"
   },
   "background": {
     "service_worker": "background.js"
