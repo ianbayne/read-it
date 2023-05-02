@@ -1,33 +1,33 @@
-function run(dateTime: string): void {
-  const commentTimeElements = document.querySelectorAll(
-    "time.live-timestamp"
-  ) as NodeListOf<HTMLTimeElement>;
-  const dateTimeToCheckAgainst = new Date(dateTime);
+import addThreadWithCurrentTime from "./utils/addThreadWithCurrentTime";
+import highlightNewComments from "./utils/highlightNewComments";
 
-  const commentTimeElementsAfterTimeConstant = Array.from(
-    commentTimeElements
-  ).filter((commentTimeElement) => {
-    const commentDateTimeString = commentTimeElement?.getAttribute("datetime");
-    if (commentDateTimeString) {
-      const commentDateTime = new Date(commentDateTimeString);
-      return commentDateTime > dateTimeToCheckAgainst;
+async function run(): Promise<void> {
+  // Get thread ID
+  const url = window.location.href;
+  const threadId = url.match(/comments\/([^/]+)\/.+/)?.[1];
+  if (!threadId) {
+    return;
+  }
+
+  // Check if thread is in history
+  chrome.storage.sync.get("threads").then(({ threads }) => {
+    const thread = threads[threadId];
+    const now = new Date();
+    if (!thread) {
+      // If the threadId is not present in storage, the user has never visited this thread before
+      // and therefore all comments must be new
+      highlightNewComments();
+    } else {
+      // If the threadId _is_ present in storage, check comments against the current time
+      highlightNewComments(now);
     }
-  });
-
-  const comments = commentTimeElementsAfterTimeConstant.map(
-    (commentTimeElementAfterTimeConstant) =>
-      commentTimeElementAfterTimeConstant.closest(".comment")
-  ) as HTMLElement[];
-
-  comments.forEach((comment) => {
-    if (comment) {
-      comment.style.backgroundColor = "#fef0f3";
-    }
+    // Update the thread's lastTimeVisited
+    addThreadWithCurrentTime(threadId, now);
   });
 }
 
-chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
-  if (request.selectedDateTime) {
-    run(request.selectedDateTime);
+chrome.runtime.onMessage.addListener((isEnabled, _sender, _sendResponse) => {
+  if (isEnabled) {
+    run();
   }
 });

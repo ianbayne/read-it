@@ -1,0 +1,2 @@
+export const NEW_COMMENT_HIGHLIGHT_COLOR = "rgb(254, 240, 243)";
+export const BUFFER_IN_MILLISECONDS = 1000 * 60 * 5;

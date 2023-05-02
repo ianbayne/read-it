@@ -3,13 +3,15 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_title": "Click to provide indication of new comments on Reddit",
-    "default_popup": "popup.html"
+    "default_title": "Click to provide indication of new comments on Reddit"
   },
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "scripting"],
+  "icons": {
+    "128": "icon128--off.png"
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
   "content_scripts": [
     {
       "matches": ["https://old.reddit.com/r/*"],
