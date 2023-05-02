@@ -19,6 +19,15 @@ const options = {
         },
       ],
     }),
+    copy({
+      resolveFrom: "cwd",
+      assets: [
+        {
+          from: ["./src/assets/images/*.png"],
+          to: ["./dist"],
+        },
+      ],
+    }),
   ],
 };
 
