@@ -21,7 +21,7 @@
     "typescript": "^5.0.2"
   },
   "scripts": {
-    "build": "yarn clean && node esbuild.mjs",
+    "build": "yarn jest && yarn clean && node esbuild.mjs",
     "clean": "rm -rf ./dist",
     "test": "jest"
   }
