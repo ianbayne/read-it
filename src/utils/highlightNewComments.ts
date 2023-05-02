@@ -1,15 +1,17 @@
+import {
+  BUFFER_IN_MILLISECONDS,
+  NEW_COMMENT_HIGHLIGHT_COLOR,
+} from "../constants";
 import isTruthy from "./isTruthy";
 
-const NEW_COMMENT_HIGHLIGHT_COLOR = "#fef0f3";
-const BUFFER_IN_MILLISECONDS = 1000 * 60 * 5;
-
-function highlightNewComments(comments: HTMLElement[]): void {
+function addHighlight(comments: HTMLElement[]): void {
   comments.forEach((comment) => {
     comment.style.backgroundColor = NEW_COMMENT_HIGHLIGHT_COLOR;
   });
 }
 
-export default function markNewComments(
+// TODO: Should this take a date string instead?
+export default function highlightNewComments(
   dateTimeToCheckAgainst = new Date(0)
 ): void {
   const dateTimeToCheckAgainstInMs = dateTimeToCheckAgainst.getTime();
@@ -36,6 +38,6 @@ export default function markNewComments(
     .filter(isTruthy);
 
   if (newComments.length) {
-    highlightNewComments(newComments);
+    addHighlight(newComments);
   }
 }

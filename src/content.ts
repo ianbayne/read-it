@@ -1,5 +1,5 @@
 import addThreadWithCurrentTime from "./utils/addThreadWithCurrentTime";
-import markNewComments from "./utils/markNewComments";
+import highlightNewComments from "./utils/highlightNewComments";
 
 async function run(): Promise<void> {
   // Get thread ID
@@ -16,10 +16,10 @@ async function run(): Promise<void> {
     if (!thread) {
       // If the threadId is not present in storage, the user has never visited this thread before
       // and therefore all comments must be new
-      markNewComments();
+      highlightNewComments();
     } else {
       // If the threadId _is_ present in storage, check comments against the current time
-      markNewComments(now);
+      highlightNewComments(now);
     }
     // Update the thread's lastTimeVisited
     addThreadWithCurrentTime(threadId, now);
