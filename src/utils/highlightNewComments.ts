@@ -1,23 +1,30 @@
 import {
   BUFFER_IN_MILLISECONDS,
+  HIGHLIGHT_CLASS_NAME,
   NEW_COMMENT_HIGHLIGHT_COLOR,
 } from "../constants";
 import isTruthy from "./isTruthy";
 
 function addHighlight(comments: HTMLElement[]): void {
   comments.forEach((comment) => {
-    comment.style.backgroundColor = NEW_COMMENT_HIGHLIGHT_COLOR;
+    // Reddit has `!important` set on the comments' background-color property, so it's easier to set the background color explicitly
+    // with JavaScript instead of using classes to change the styling
+    comment.style.setProperty(
+      "background-color",
+      NEW_COMMENT_HIGHLIGHT_COLOR,
+      "important"
+    );
+    comment.classList.add(HIGHLIGHT_CLASS_NAME); // Class name added so highlighted comments can be easily querySelectAll-ed
   });
 }
 
-// TODO: Should this take a date string instead?
 export default function highlightNewComments(
   dateTimeToCheckAgainst = new Date(0)
 ): void {
   const dateTimeToCheckAgainstInMs = dateTimeToCheckAgainst.getTime();
-  const dateTimeToCheckAgainstPlusBuffer = new Date(
-    dateTimeToCheckAgainstInMs + BUFFER_IN_MILLISECONDS
-  );
+  const dateTimeStringToCheckAgainstWithBuffer = new Date(
+    dateTimeToCheckAgainstInMs - BUFFER_IN_MILLISECONDS
+  ).toISOString();
   const allCommentTimeElements = document.querySelectorAll<HTMLElement>(
     "time.live-timestamp"
   );
@@ -25,8 +32,7 @@ export default function highlightNewComments(
     (commentTimeElement) => {
       const commentDateTimeString = commentTimeElement.getAttribute("datetime");
       if (commentDateTimeString) {
-        const commentDateTime = new Date(commentDateTimeString);
-        return commentDateTime > dateTimeToCheckAgainstPlusBuffer;
+        return commentDateTimeString > dateTimeStringToCheckAgainstWithBuffer;
       }
     }
   );
