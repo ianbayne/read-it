@@ -1,5 +1,7 @@
-import addThreadWithCurrentTime from "./utils/addThreadWithCurrentTime";
+import RedditThread from "./RedditThread";
+import storeThreadIdWithTime from "./utils/storeThreadIdWithTime";
 import highlightNewComments from "./utils/highlightNewComments";
+import removeHighlights from "./utils/removeHighlights";
 
 async function run(): Promise<void> {
   // Get thread ID
@@ -9,25 +11,24 @@ async function run(): Promise<void> {
     return;
   }
 
-  // Check if thread is in history
-  chrome.storage.sync.get("threads").then(({ threads }) => {
-    const thread = threads[threadId];
-    const now = new Date();
-    if (!thread) {
-      // If the threadId is not present in storage, the user has never visited this thread before
-      // and therefore all comments must be new
-      highlightNewComments();
-    } else {
-      // If the threadId _is_ present in storage, check comments against the current time
-      highlightNewComments(now);
-    }
-    // Update the thread's lastTimeVisited
-    addThreadWithCurrentTime(threadId, now);
-  });
+  const thread = new RedditThread(threadId);
+  const lastTimeVisited = await thread.lastTimeVisitedAsync();
+  const now = new Date();
+  if (lastTimeVisited) {
+    // The thread has been visited before so only highlight new comments
+    highlightNewComments(now);
+  } else {
+    // It's the first time visiting the thread so highlight all comments
+    highlightNewComments();
+  }
+  // Update the thread's lastTimeVisited
+  storeThreadIdWithTime(thread.threadId, now);
 }
 
 chrome.runtime.onMessage.addListener((isEnabled, _sender, _sendResponse) => {
   if (isEnabled) {
     run();
+  } else {
+    removeHighlights();
   }
 });

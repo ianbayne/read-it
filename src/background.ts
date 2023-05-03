@@ -1,6 +1,6 @@
 function handleTabCreatedOrUpdated(tab: chrome.tabs.Tab): void {
   chrome.storage.sync.get("isEnabled").then((result) => {
-    const isEnabled = result.isEnabled;
+    const { isEnabled } = result;
     setIconColor(tab, isEnabled);
     runContentScript(tab, isEnabled);
   });
@@ -27,10 +27,10 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.storage.sync.set({ threads: {} });
     }
   });
-  chrome.storage.sync.set({ isEnabled: false });
+  chrome.storage.sync.set({ isEnabled: false }); // Install turned off...
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
-      setIconColor(tab, false);
+      setIconColor(tab, false); // ... and with icon set to the off version
     });
   });
 });

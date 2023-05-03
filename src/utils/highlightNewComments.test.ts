@@ -5,7 +5,7 @@
 import { describe, expect, it } from "@jest/globals";
 
 import highlightNewComments from "./highlightNewComments";
-import { NEW_COMMENT_HIGHLIGHT_COLOR } from "../constants";
+import { BUFFER_IN_MILLISECONDS } from "../constants";
 
 describe("highlightNewComments()", () => {
   it("when not passed an argument, highlights all comments ", () => {
@@ -19,43 +19,48 @@ describe("highlightNewComments()", () => {
 
     highlightNewComments();
 
-    const comments = document.querySelectorAll(
-      ".comment"
-    ) as NodeListOf<HTMLElement>;
+    const highlightedComments = document.querySelectorAll(
+      ".comment.chrome-extension__highlight"
+    );
 
-    const highlightedComments = [];
-    comments.forEach((comment) => {
-      if (comment.style.backgroundColor === NEW_COMMENT_HIGHLIGHT_COLOR) {
-        highlightedComments.push(comment);
-      }
-    });
     expect(highlightedComments.length).toBe(2);
+    highlightedComments.forEach((highlightedComment) => {
+      const backgroundColor =
+        getComputedStyle(highlightedComment).getPropertyValue(
+          "background-color"
+        );
+      expect(backgroundColor).toBe("rgb(254, 240, 243)");
+    });
   });
 
-  it("when passed a date string, highlights only comments newer than that date string (plus the five minute buffer)", () => {
-    const thirtyMinutesAgo = new Date().getTime() - 1000 * 60 * 30;
-    const timeForFirstComment = new Date().toISOString();
-    const timeForSecondComment = new Date(thirtyMinutesAgo).toISOString();
+  it("when passed a date string, highlights only comments newer than that date string (taking into consideration the buffer)", () => {
+    const timeForFirstComment = new Date(
+      new Date().getTime() - BUFFER_IN_MILLISECONDS / 2
+    ).toISOString();
+    const timeForSecondComment = new Date(
+      new Date().getTime() - BUFFER_IN_MILLISECONDS * 2
+    ).toISOString();
 
     document.body.innerHTML = simplifiedDom(
       timeForFirstComment,
       timeForSecondComment
     );
 
-    const tenMinutesAgo = new Date(new Date().getTime() - 1000 * 60 * 10);
-    highlightNewComments(tenMinutesAgo);
+    const now = new Date();
+    highlightNewComments(now);
 
-    const comments = document.querySelectorAll(
-      ".comment"
-    ) as NodeListOf<HTMLElement>;
+    const highlightedComments = document.querySelectorAll(
+      ".comment.chrome-extension__highlight"
+    );
 
-    const highlightedComments = [];
-    comments.forEach((comment) => {
-      if (comment.style.backgroundColor === NEW_COMMENT_HIGHLIGHT_COLOR) {
-        highlightedComments.push(comment);
-      }
-    });
     expect(highlightedComments.length).toBe(1);
+    highlightedComments.forEach((highlightedComment) => {
+      const backgroundColor =
+        getComputedStyle(highlightedComment).getPropertyValue(
+          "background-color"
+        );
+      expect(backgroundColor).toBe("rgb(254, 240, 243)");
+    });
   });
 });
 
