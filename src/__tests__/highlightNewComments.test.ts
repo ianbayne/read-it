@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from "@jest/globals";
 
-import highlightNewComments from "./highlightNewComments";
+import highlightNewComments from "../utils/highlightNewComments";
 import { BUFFER_IN_MILLISECONDS } from "../constants";
 
 describe("highlightNewComments()", () => {

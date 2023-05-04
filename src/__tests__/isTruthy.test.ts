@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import isTruthy from "./isTruthy";
+import isTruthy from "../utils/isTruthy";
 
 describe("isTruthy()", () => {
   it("returns false for empty strings, undefined, null, and false", () => {
