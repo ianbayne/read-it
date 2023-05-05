@@ -28,7 +28,7 @@ export default function highlightNewComments(
     (commentTimeElement) => {
       const commentDateTimeString = commentTimeElement.getAttribute("datetime");
       if (commentDateTimeString) {
-        return commentDateTimeString > dateTimeStringToCheckAgainstWithBuffer;
+        return commentDateTimeString >= dateTimeStringToCheckAgainstWithBuffer;
       }
     }
   );
