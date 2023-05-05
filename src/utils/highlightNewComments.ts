@@ -1,7 +1,7 @@
 import {
   BUFFER_IN_MILLISECONDS,
   HIGHLIGHT_CLASS_NAME,
-  NEW_COMMENT_HIGHLIGHT_COLOR,
+  HIGHLIGHT_COLOR,
 } from "../constants";
 import isTruthy from "./isTruthy";
 
@@ -9,12 +9,7 @@ function addHighlight(comments: HTMLElement[]): void {
   comments.forEach((comment) => {
     // Reddit has `!important` set on the comments' background-color property, so it's easier to set the background color explicitly
     // with JavaScript instead of using classes to change the styling
-    comment.style.setProperty(
-      "background-color",
-      NEW_COMMENT_HIGHLIGHT_COLOR,
-      "important"
-    );
-    comment.classList.add(HIGHLIGHT_CLASS_NAME); // Class name added so highlighted comments can be easily querySelectAll-ed
+    comment.style.setProperty("background-color", HIGHLIGHT_COLOR, "important");
     comment.classList.add(HIGHLIGHT_CLASS_NAME); // Class name added so highlighted comments can be easily querySelectAll-ed for later removal
   });
 }
