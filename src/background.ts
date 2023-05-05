@@ -23,11 +23,12 @@ function runContentScript(tab: chrome.tabs.Tab, isEnabled: boolean): void {
 // when Chrome is updated to a new version.
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get("threads").then((result) => {
+    // If this is the very first time using the extension, ensure the storage is initialized with a threads object
     if (!Object.keys(result).length) {
       chrome.storage.sync.set({ threads: {} });
     }
   });
-  chrome.storage.sync.set({ isEnabled: false }); // Install turned off...
+  chrome.storage.sync.set({ isEnabled: false }); // Install the extension turned off...
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
       setIconColor(tab, false); // ... and with icon set to the off version
@@ -45,6 +46,7 @@ chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
   handleTabCreatedOrUpdated(tab);
 });
 
+// Runs when the Chrome extension icon is clicked
 chrome.action.onClicked.addListener(() => {
   chrome.storage.sync.get("isEnabled").then((result) => {
     const nextIsEnabled = !result.isEnabled;

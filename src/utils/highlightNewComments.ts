@@ -15,6 +15,7 @@ function addHighlight(comments: HTMLElement[]): void {
       "important"
     );
     comment.classList.add(HIGHLIGHT_CLASS_NAME); // Class name added so highlighted comments can be easily querySelectAll-ed
+    comment.classList.add(HIGHLIGHT_CLASS_NAME); // Class name added so highlighted comments can be easily querySelectAll-ed for later removal
   });
 }
 
